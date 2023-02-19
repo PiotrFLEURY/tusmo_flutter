@@ -66,9 +66,6 @@ class HomePage extends ConsumerWidget {
     WidgetRef ref,
     String word,
   ) {
-    if (word.length != ref.read(tusmoStateProvider).wordToFind.length) {
-      return;
-    }
     final notifier = ref.read(tusmoStateProvider.notifier);
     if (notifier.win(word)) {
       _showWinDialog(context, ref);
