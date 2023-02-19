@@ -12,7 +12,7 @@ class TusmoState {
       .map(
         (letter) => submittedWords.containsLetter(letter) ? letter : '_',
       )
-      .join(' ');
+      .join('');
 }
 
 extension StringExt on List<String> {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tusmo_flutter/home/states/provider.dart';
+import 'package:tusmo_flutter/home/views/word.dart';
 
 class HomePage extends ConsumerWidget {
   HomePage({super.key});
@@ -25,24 +26,12 @@ class HomePage extends ConsumerWidget {
                   ),
             ),
             const Spacer(),
-            Text(
-              state.obfuscatedWord,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    color: Colors.white,
-                  ),
+            Word(
+              value: state.obfuscatedWord,
+              letterColor: Colors.green,
             ),
             const Spacer(),
-            ...state.submittedWords
-                .map(
-                  (word) => Text(
-                    word,
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
-                )
-                .toList(),
+            ...state.submittedWords.map((value) => Word(value: value)).toList(),
             const Spacer(),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.5,
@@ -77,6 +66,9 @@ class HomePage extends ConsumerWidget {
     WidgetRef ref,
     String word,
   ) {
+    if (word.length != ref.read(tusmoStateProvider).wordToFind.length) {
+      return;
+    }
     final notifier = ref.read(tusmoStateProvider.notifier);
     if (notifier.win(word)) {
       _showWinDialog(context, ref);
@@ -106,7 +98,6 @@ class HomePage extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 const Spacer(),
-                // Text word was: ${state.wordToFind}
                 Text(
                   'Word was: ${ref.read(tusmoStateProvider).wordToFind}',
                   style: Theme.of(context).textTheme.labelLarge,
