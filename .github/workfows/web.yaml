@@ -1,0 +1,29 @@
+name: CI Web
+on: push
+jobs:
+  build-web:
+    name: Build web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+      - name: Build web
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter format --set-exit-if-changed .
+          flutter build web --base-href "/tsumo_flutter/"
+      - name: Copy built files
+        run: |
+          mkdir docs
+          cp -R build/web/* docs
+      - name: Commit changes
+        run: |
+          git config user.name "PiotrFLEURY"
+          git config user.email "piotr.fleury@gmail.com"
+          git checkout -b chore/build-web
+          git add .
+          git commit -m "new build to deploy"
+          git push -f -u origin chore/build-web
